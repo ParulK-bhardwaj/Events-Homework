@@ -10,7 +10,12 @@ from sqlalchemy.orm import backref
 # - events_attending: relationship to "Event" table with a secondary table
 
 class Guest(db.Model):
+    """Guest model."""
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+    events_attending = db.relationship('Event', secondary='guest_event', back_populates='guests')
 
 # TODO: Create a model called `Event` with the following fields:
 # - id: primary key
@@ -24,6 +29,24 @@ class Guest(db.Model):
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), nullable=False, unique=True)
+    description = db.Column(db.String(200))
+
+    guests= db.relationship('Guest', secondary='guest_event', back_populates='events_attending')
+
+    def __str__(self):
+        return f'<User: {self.title}>'
+
+    def __repr__(self):
+        return f"""<{self.id}: {self.title}>"""
+
+guest_event = db.Table('guest_event',
+    db.Column('guest_id', db.Integer, db.ForeignKey('guest.id')),
+    db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
+)
+
+
+
 
 # TODO: Create a table `guest_event_table` with the following columns:
 # - event_id: Integer column (foreign key)
