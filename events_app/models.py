@@ -1,6 +1,8 @@
 """Create database models to represent tables."""
 from events_app import db
 from sqlalchemy.orm import backref
+import enum
+
 
 # TODO: Create a model called `Guest` with the following fields:
 # - id: primary key
@@ -14,6 +16,7 @@ class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(12), unique=True, nullable=False)
 
     events_attending = db.relationship('Event', secondary='guest_event', back_populates='guests')
 
@@ -27,10 +30,20 @@ class Guest(db.Model):
 # STRETCH CHALLENGE: Add a field `event_type` as an Enum column that denotes the
 # type of event (Party, Study, Networking, etc)
 
+class Event_type(enum.Enum):
+    Party = 1
+    Study = 2
+    Networking = 3
+    Generic = 4
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False, unique=True)
     description = db.Column(db.String(200))
+    date_and_time = db.Column(db.DateTime)
+
+    # The type - What type of event it is?
+    event_type = db.Column(db.Enum(Event_type), default=Event_type.Generic)
 
     guests= db.relationship('Guest', secondary='guest_event', back_populates='events_attending')
 
