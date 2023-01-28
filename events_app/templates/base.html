@@ -6,11 +6,11 @@
     </head>
     <body>
         <div id="content">
-            {% for message in get_flashed_messages() %}
-                {{ message }}
-            {% endfor %}
-
-            {% block content %}{% endblock %}
+            {% block content %}
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
+            {% endblock %}
         </div>
         <script src="/static/index.js"></script>
     </body>

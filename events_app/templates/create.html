@@ -20,7 +20,12 @@
         <p class="error">Error: {{ error }}</p>
     {% endif %}
     <p>
-        
+        <label>
+            Type of Event: <br>
+            <input type="number" name="type" min="1" max="4">
+        </label>
+    </p>
+    <p>   
         <label>
             Date and Time: <br>
             <input type="date" name="date" placeholder="Date format YYYY-mm-dd">
