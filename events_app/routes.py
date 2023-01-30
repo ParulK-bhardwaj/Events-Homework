@@ -26,9 +26,8 @@ def create():
     """Create a new event."""
     if request.method == 'POST':
         new_event_title = request.form.get('title')
-        new_event_description = request.form.get('description')
-        # TO DO: FIX The event type error, currently giving only default 4  
-        new_event_type = request.form.get('event_type')
+        new_event_description = request.form.get('description') 
+        # new_event_type = request.form.get('event_type')
         date = request.form.get('date')
         time = request.form.get('time')
 
@@ -56,20 +55,20 @@ def create():
 def event_detail(event_id):
     """Show a single event."""
 
-    # TODO: Get the event with the given id and send to the template
+    # Get the event with the given id and send to the template
     event = Event.query.get (event_id)
     return render_template('event_detail.html', event=event)
 
 @main.route('/event/<event_id>', methods=['POST'])
 def rsvp(event_id):
     """RSVP to an event."""
-    # TODO: Get the event with the given id from the database
+    # Get the event with the given id from the database
     current_event = Event.query.get(event_id)
     is_returning_guest = request.form.get('returning')
     guest_name = request.form.get('guest_name')
 
     if is_returning_guest:
-        # TODO: Look up the guest by name. If the guest doesn't exist in the 
+        # Look up the guest by name. If the guest doesn't exist in the 
         # database, render the event_detail.html template, and pass in an error
         # message as `error`.
         guest = Guest.query.filter_by(name=guest_name).first()
@@ -80,13 +79,13 @@ def rsvp(event_id):
             guest.events_attending.append(current_event)
             db.session.add(guest)
             db.session.commit()
-        # TODO: If the guest does exist, add the event to their 
+        # If the guest does exist, add the event to their 
         # events_attending, then commit to the database.s
     else:
         guest_email = request.form.get('email')
         guest_phone = request.form.get('phone')
         
-        # TODO: Create a new guest with the given name, email, and phone, and 
+        # Created a new guest with the given name, email, and phone, and 
         # add the event to their events_attending, then commit to the database.
         guest = Guest(name=guest_name, email=guest_email, phone=guest_phone)
         guest.events_attending.append(current_event)
@@ -99,6 +98,6 @@ def rsvp(event_id):
 
 @main.route('/guest/<guest_id>')
 def guest_detail(guest_id):
-    # TODO: Get the guest with the given id and send to the template
+    # Get the guest with the given id and send to the template
     guest = Guest.query.filter_by(id=guest_id).first()
     return render_template('guest_detail.html', guest=guest)
